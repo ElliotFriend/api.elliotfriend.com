@@ -28,4 +28,7 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
+    from app.fcc import bp as fcc_bp
+    app.register_blueprint(fcc_bp, url_prefix='/fcc')
+
     return app
