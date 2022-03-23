@@ -118,7 +118,7 @@ def side_quest_02_clue():
     transaction.sign(issue_kp)
     transaction.sign(sign_kp)
     resp = server.submit_transaction(transaction)
-    print(resp)
+    # print(resp)
 
     data = {
         'clue': sign_kp.secret
