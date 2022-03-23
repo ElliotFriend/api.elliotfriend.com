@@ -8,5 +8,6 @@ setup(
     zip_safe=False,
     install_requires=[
         'flask',
+        'stellar_sdk'
     ],
 )

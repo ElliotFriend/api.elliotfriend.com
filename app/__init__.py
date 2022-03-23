@@ -31,4 +31,7 @@ def create_app(test_config=None):
     from app.fcc import bp as fcc_bp
     app.register_blueprint(fcc_bp, url_prefix='/fcc')
 
+    from app.sq import bp as sq_bp
+    app.register_blueprint(sq_bp, url_prefix='/sq')
+
     return app
