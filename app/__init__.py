@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 
 def create_app(test_config=None):
     # create and configure the app
@@ -27,6 +27,10 @@ def create_app(test_config=None):
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
+
+    @app.route('/')
+    def index_page():
+        return jsonify({ 'hello': 'world' })
 
     from app.fcc import bp as fcc_bp
     app.register_blueprint(fcc_bp, url_prefix='/fcc')
