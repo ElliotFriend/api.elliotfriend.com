@@ -38,4 +38,7 @@ def create_app(test_config=None):
     from app.sq import bp as sq_bp
     app.register_blueprint(sq_bp, url_prefix='/sq')
 
+    from app.sq import db
+    db.init_app(app)
+
     return app

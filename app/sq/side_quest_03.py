@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from app.sq import bp
+from app.sq.db import get_db
 
 import requests
 
@@ -45,10 +46,20 @@ def side_quest_03():
                 if cb_created and cb_claimed:
                     return jsonify({'success': True, 'message': 'Congratulations! You did it. I always knew you could. Now, head on over to Discord and let me know what you think.'})
         return jsonify({ 'success': False, 'message': 'Sorry, your sponsor account has not successfully submitted a transaction that meets the criteria. Please give it another shot.'})
+
     sponsor = Keypair.random()
     claimant = Keypair.random()
     for kp in [ sponsor, claimant ]:
         fund_using_friendbot(kp.public_key)
+
+    db = get_db()
+    db.execute(
+    'INSERT INTO sq03_clues (sponsor_pk, sponsor_sk, claimant_pk, claimant_sk)'
+    ' VALUES (?, ?, ?, ?)',
+    (sponsor.public_key, sponsor.secret, claimant.public_key, claimant.secret)
+    )
+    db.commit()
+    
     return jsonify({
         'clue': {
             'sponsor': {
