@@ -1,5 +1,4 @@
 from flask import jsonify, request
-from flask_cors import cross_origin
 from app.sq import bp
 from app.sq.db import get_db
 
@@ -8,7 +7,6 @@ import requests
 from stellar_sdk import Keypair, Server, Network
 
 @bp.route('/sq04', methods=['GET', 'POST'])
-@cross_origin()
 def side_quest_04_clue():
     if request.method == 'POST':
         pubkey = request.get_json()['public_key']
