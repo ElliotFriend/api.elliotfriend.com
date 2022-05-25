@@ -44,7 +44,22 @@ def side_quest_03():
                                 operations[i]['claimant'] == claimant):
                             cb_claimed = True
                 if cb_created and cb_claimed:
+                    db = get_db()
+                    db.execute(
+                        'INSERT INTO sq03_verification (sponsor, claimant, success)'
+                        ' VALUES (?, ?, ?)',
+                        (sponsor, claimant, 1)
+                    )
+                    db.commit()
+
                     return jsonify({'success': True, 'message': 'Congratulations! You did it. I always knew you could. Now, head on over to Discord and let me know what you think.'})
+        db = get_db()
+        db.execute(
+            'INSERT INTO sq03_verification (sponsor, claimant, success)'
+            ' VALUES (?, ?, ?)',
+            (sponsor, claimant, 0)
+        )
+        db.commit()
         return jsonify({ 'success': False, 'message': 'Sorry, your sponsor account has not successfully submitted a transaction that meets the criteria. Please give it another shot.'})
 
     sponsor = Keypair.random()
@@ -54,12 +69,12 @@ def side_quest_03():
 
     db = get_db()
     db.execute(
-    'INSERT INTO sq03_clues (sponsor_pk, sponsor_sk, claimant_pk, claimant_sk)'
-    ' VALUES (?, ?, ?, ?)',
-    (sponsor.public_key, sponsor.secret, claimant.public_key, claimant.secret)
+        'INSERT INTO sq03_clues (sponsor_pk, sponsor_sk, claimant_pk, claimant_sk)'
+        ' VALUES (?, ?, ?, ?)',
+        (sponsor.public_key, sponsor.secret, claimant.public_key, claimant.secret)
     )
     db.commit()
-    
+
     return jsonify({
         'clue': {
             'sponsor': {

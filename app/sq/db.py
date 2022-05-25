@@ -23,13 +23,26 @@ def init_sq03_db():
     with current_app.open_resource('sq/side_quest_03_schema.sql', mode='r') as f:
         db.cursor().executescript(f.read())
 
+def init_sq04_db():
+    db = get_db()
+    with current_app.open_resource('sq/side_quest_04_schema.sql', mode='r') as f:
+        db.cursor().executescript(f.read())
+
 @click.command('init-sq03-db')
 @with_appcontext
 def init_sq03_db_command():
     """Clear the existing data and create new tables."""
     init_sq03_db()
-    click.echo('Initialized the sq03 database')
+    click.echo('Initialized the sq03 tables')
+
+@click.command('init-sq04-db')
+@with_appcontext
+def init_sq04_db_command():
+    """Clear the existing data and create new tables."""
+    init_sq04_db()
+    click.echo('Initialized the sq04 tables')
 
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_sq03_db_command)
+    app.cli.add_command(init_sq04_db_command)
