@@ -48,6 +48,7 @@ def side_quest_04_clue():
                 operations = server.operations().for_transaction(tx_records[rec]['hash']).call()['_embedded']['records']
                 for i in range(0, len(operations)):
                     op = operations[i]
+                    print(op)
                     if op['type'] == 'create_account':
                         if op['account'] == pubkey:
                             scorecard['created'] = True
@@ -65,7 +66,7 @@ def side_quest_04_clue():
                         scorecard['weights']['med'] = op['med_threshold'] if 'med_threshold' in op else scorecard['weights']['med']
                         scorecard['weights']['high'] = op['high_threshold'] if 'high_threshold' in op else scorecard['weights']['high']
                         scorecard['weights']['master'] = op['master_key_weight'] if 'master_key_weight' in op else scorecard['weights']['master']
-                        if op['signer_key']:
+                        if 'signer_key' in op:
                             scorecard['signers'] += 1
                             scorecard['signer_types']['hash'] = op['signer_weight'] if op['signer_key'].startswith('X') else scorecard['signer_types']['hash']
                             scorecard['signer_types']['pubkey'] = op['signer_weight'] if op['signer_key'].startswith('G') else scorecard['signer_types']['pubkey']
