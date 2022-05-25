@@ -48,7 +48,6 @@ def side_quest_04_clue():
                 operations = server.operations().for_transaction(tx_records[rec]['hash']).call()['_embedded']['records']
                 for i in range(0, len(operations)):
                     op = operations[i]
-                    print(op)
                     if op['type'] == 'create_account':
                         if op['account'] == pubkey:
                             scorecard['created'] = True
