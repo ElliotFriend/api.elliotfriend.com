@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS sq05_clues;
+DROP TABLE IF EXISTS sq05_verification;
+
+CREATE TABLE "sq05_clues" (
+  "ID" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "quest_pk" VARCHAR(100) UNIQUE,
+  "quest_sk" VARCHAR(100),
+  "target_sequence" INTEGER,
+  "timestamp" DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+;
+
+CREATE TABLE "sq05_verification" (
+  "ID" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "quest_pk" VARCHAR(100),
+  "success" INTEGER,
+  "timestamp" DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+;
