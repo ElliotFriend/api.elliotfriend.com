@@ -1,5 +1,4 @@
 from flask import jsonify, request
-from flask_cors import cross_origin
 from app.sq import bp
 from app.sq.db import get_db, query_db
 
@@ -20,7 +19,6 @@ def fund_using_friendbot(public_key):
         response.raise_for_status()
 
 @bp.route('/sq05', methods=['GET', 'POST'])
-@cross_origin()
 def side_quest_05_clue():
     if request.method == 'POST':
         pubkey = request.get_json()['public_key']
