@@ -70,11 +70,10 @@ def side_quest_04_clue():
                             scorecard['signer_types']['hash'] = op['signer_weight'] if op['signer_key'].startswith('X') else scorecard['signer_types']['hash']
                             scorecard['signer_types']['pubkey'] = op['signer_weight'] if op['signer_key'].startswith('G') else scorecard['signer_types']['pubkey']
                     elif op['type'] == 'create_claimable_balance':
-                        if op['sponsor'] == pubkey:
-                            scorecard['cb'] = True
-                            scorecard['cb_op_num'] = i
-                            for clmt in op['claimants']:
-                                scorecard['cb_dest'] = clmt['destination'] if clmt['destination'] != pubkey else scorecard['cb_dest']
+                        scorecard['cb'] = True
+                        scorecard['cb_op_num'] = i
+                        for clmt in op['claimants']:
+                            scorecard['cb_dest'] = clmt['destination'] if clmt['destination'] != pubkey else scorecard['cb_dest']
             response['scorecard'] = scorecard
             if (
                     scorecard['created'] == True and scorecard['starting_balance'] == 500 and
@@ -89,8 +88,7 @@ def side_quest_04_clue():
                     scorecard['signer_types']['hash'] + scorecard['signer_types']['pubkey'] >= scorecard['weights']['high'] and
                     scorecard['memo'] == 'text' and scorecard['funder'] == scorecard['inflation'] and
                     scorecard['cb'] == True and scorecard['cb_op_num'] < scorecard['new_account_op_num'] and
-                    scorecard['cb_dest'] == scorecard['new_account_pubkey'] and scorecard['new_account_balance'] == 0 and
-                    scorecard['new_account_funder'] == pubkey
+                    scorecard['cb_dest'] == scorecard['new_account_pubkey'] and scorecard['new_account_balance'] == 0
                 ):
                 response['success'] = True
                 response['message'] = 'Congratulations! You did it. I always knew you could. Now, head on over to Discord and let me know what you think.'
