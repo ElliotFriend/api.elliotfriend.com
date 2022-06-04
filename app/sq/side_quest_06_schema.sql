@@ -3,8 +3,8 @@ DROP TABLE IF EXISTS sq06_verification;
 
 CREATE TABLE "sq06_clues" (
   "ID" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "quest_pk" VARCHAR(100) UNIQUE,
-  "quest_sk" VARCHAR(100),
+  "quest_pk" TEXT UNIQUE,
+  "quest_sk" TEXT,
   "muxes" TEXT,
   "timestamp" DATETIME DEFAULT CURRENT_TIMESTAMP
 )
@@ -12,7 +12,7 @@ CREATE TABLE "sq06_clues" (
 
 CREATE TABLE "sq06_verification" (
   "ID" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "quest_pk" VARCHAR(100),
+  "quest_pk" TEXT,
   "success" INTEGER,
   "timestamp" DATETIME DEFAULT CURRENT_TIMESTAMP
 )

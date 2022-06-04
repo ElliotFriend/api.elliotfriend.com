@@ -13,7 +13,7 @@ def fund_using_friendbot(public_key):
         response.raise_for_status()
 
 def create_zero_balance_account(dest_kp):
-    source_kp = Keypair.from_secret('SB66DX5ONPPFJPZ5I2JFQDRKYYI7262LDRCOR7G7S74LZKEXYA4NIZVY')
+    source_kp = Keypair.from_secret('SB2KSX3A5PFVE54UGF2MSYQ2R7DWO4VBTWMCYDCDLTXXN36YRU7MDTPN')
     server = Server('https://horizon-testnet.stellar.org')
     account = server.load_account(source_kp.public_key)
     transaction = (
