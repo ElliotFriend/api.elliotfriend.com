@@ -6,7 +6,7 @@ import requests
 from random import randrange
 # from hashlib import sha256
 
-from stellar_sdk import Keypair, Server, Network, TransactionBuilder
+from stellar_sdk import Keypair, Server, Network, TransactionBuilder, StrKey
 
 def fund_using_friendbot(public_key):
     # First, check if the account already exists on the testnet
@@ -21,9 +21,18 @@ def fund_using_friendbot(public_key):
 @bp.route('/sq05', methods=['GET', 'POST'])
 def side_quest_05_clue():
     if request.method == 'POST':
-        pubkey = request.get_json()['public_key']
-        response = { 'pubkey': pubkey, 'success': False }
-        response['message'] = 'Quest Account has not yet reached the target sequence number.'
+        req = request.get_json()
+        response = {
+            'success': False,
+            'message': 'Quest Account has not yet reached the target sequence number.'
+        }
+        if 'public_key' not in req:
+            response['message'] = "Sorry, I can't help you verify until you generate a clue."
+            return jsonify(response)
+        if not StrKey.is_valid_ed25519_public_key(req['public_key']):
+            response['message'] = 'Sorry, something is wrong with the public key you gave. Please try again.'
+            return jsonify(response)
+        pubkey = req['public_key']
         server = Server('https://horizon-testnet.stellar.org')
         account = server.load_account(pubkey)
 

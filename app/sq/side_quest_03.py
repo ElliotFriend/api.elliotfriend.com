@@ -4,7 +4,7 @@ from app.sq.db import get_db
 
 import requests
 
-from stellar_sdk import Keypair, Server, Network, TransactionEnvelope
+from stellar_sdk import Keypair, Server, Network, TransactionEnvelope, StrKey
 
 def fund_using_friendbot(public_key):
     # First, check if the account already exists on the testnet
@@ -19,7 +19,17 @@ def fund_using_friendbot(public_key):
 @bp.route('/sq03', methods=['GET', 'POST'])
 def side_quest_03():
     if request.method == 'POST':
-        json = request.get_json()
+        req = request.get_json()
+        response = {
+            'success': False,
+            'message': 'Sorry, your sponsor account has not successfully submitted a transaction that meets the criteria. Please give it another shot.'
+        }
+        if 'sponsor' not in req or 'claimant' not in req:
+            response['message'] = 'Sorry, your request was missing a required field. Please try again.'
+            return jsonify(response)
+        if not StrKey.is_valid_ed25519_public_key(req['sponsor']) or not StrKey.is_valid_ed25519_public_key(req['claimant']):
+            response['message'] = 'Sorry, something is wrong with the public key(s) you gave. Please try again.'
+            return jsonify(response)
         sponsor = json['sponsor']
         claimant = json['claimant']
         server = Server('https://horizon-testnet.stellar.org')
@@ -51,8 +61,8 @@ def side_quest_03():
                         (sponsor, claimant, 1)
                     )
                     db.commit()
-
-                    return jsonify({'success': True, 'message': 'Congratulations! You did it. I always knew you could. Now, head on over to Discord and let me know what you think.'})
+                    response['message'] = 'Congratulations! You did it. I always knew you could. Now, head on over to Discord and let me know what you think.'
+                    return jsonify(response)
         db = get_db()
         db.execute(
             'INSERT INTO sq03_verification (sponsor, claimant, success)'
@@ -60,7 +70,7 @@ def side_quest_03():
             (sponsor, claimant, 0)
         )
         db.commit()
-        return jsonify({ 'success': False, 'message': 'Sorry, your sponsor account has not successfully submitted a transaction that meets the criteria. Please give it another shot.'})
+        return jsonify(response)
 
     sponsor = Keypair.random()
     claimant = Keypair.random()

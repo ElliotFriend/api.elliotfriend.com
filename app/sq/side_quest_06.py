@@ -18,10 +18,10 @@ def side_quest_06_clue():
             'success': False,
             'message': 'Muxed accounts have not yet received the required payments.'
         }
-        if 'pubkey' not in req:
+        if 'public_key' not in req:
             response['message'] = "Sorry, I can't help you verify until you generate a clue."
             return jsonify(response)
-        if not StrKey.is_valid_ed25519_public_key(req['pubkey']):
+        if not StrKey.is_valid_ed25519_public_key(req['public_key']):
             response['message'] = 'Sorry, something is wrong with the public key you gave. Please try again.'
             return jsonify(response)
         pubkey = req['pubkey']
