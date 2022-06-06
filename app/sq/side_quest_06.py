@@ -7,18 +7,24 @@ from app.sq.utils import create_zero_balance_account
 import requests
 import json
 
-from stellar_sdk import Keypair, Server
+from stellar_sdk import Keypair, Server, StrKey
 from random import randrange
 
 @bp.route('/sq06', methods=['GET', 'POST'])
 def side_quest_06_clue():
     if request.method == 'POST':
-        pubkey = request.get_json()['public_key']
+        req = request.get_json()
         response = {
-            'pubkey': pubkey,
             'success': False,
             'message': 'Muxed accounts have not yet received the required payments.'
         }
+        if 'pubkey' not in req:
+            response['message'] = "Sorry, I can't help you verify until you generate a clue."
+            return jsonify(response)
+        if not StrKey.is_valid_ed25519_public_key(req['pubkey']):
+            response['message'] = 'Sorry, something is wrong with the public key you gave. Please try again.'
+            return jsonify(response)
+        pubkey = req['pubkey']
         db_clue = query_db('SELECT * FROM sq06_clues WHERE quest_pk = ?',
                            [pubkey], one=True)
         db_muxes = json.loads(db_clue['muxes'])
@@ -28,7 +34,6 @@ def side_quest_06_clue():
 
         server = Server('https://horizon-testnet.stellar.org')
         payments = server.payments().for_account(pubkey).limit(200).order(desc=True).call()['_embedded']['records']
-        response['payments'] = payments
         for p in payments:
             if 'to_muxed' in p:
                 if int(p['to_muxed_id']) in db_muxes:
@@ -36,8 +41,6 @@ def side_quest_06_clue():
                     muxes_received.append(int(p['to_muxed_id']))
 
         muxes_received = list(set(muxes_received))
-        response['paid'] = total_paid
-        response['muxes_received'] = muxes_received
         db_muxes.sort()
         muxes_received.sort()
         if db_muxes == muxes_received and sum(db_muxes) == total_paid:
