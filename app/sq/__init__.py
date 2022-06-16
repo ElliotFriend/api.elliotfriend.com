@@ -8,3 +8,5 @@ from app.sq import side_quest_03
 from app.sq import side_quest_04
 from app.sq import side_quest_05
 from app.sq import side_quest_06
+
+from app.sq import badge_check
