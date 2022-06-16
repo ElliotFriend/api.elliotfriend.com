@@ -1,5 +1,4 @@
 from flask import jsonify, request
-from flask_cors import cross_origin
 from app.sq import bp
 
 from stellar_sdk import Server
@@ -9,7 +8,6 @@ from stellar_sdk.exceptions import NotFoundError
 import itertools
 
 @bp.route('/badges', methods=['POST'])
-@cross_origin()
 def batch_check():
     req = request.get_json()
     if 'public_keys' not in req:
